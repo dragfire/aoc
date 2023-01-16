@@ -1,4 +1,5 @@
 use std::marker::PhantomData;
+
 use crate::observable::LocalObservable;
 use crate::subscription::{SubscriptionLike, SubscriptionWrapper};
 
@@ -17,7 +18,7 @@ pub trait Observer {
 pub struct ObserverN<N, Item> {
     next: N,
     is_stopped: bool,
-    _marker: PhantomData<Item>
+    _marker: PhantomData<Item>,
 }
 
 impl<Item, N> Observer for ObserverN<N, Item>
@@ -59,7 +60,7 @@ impl<S, N> SubscribeNext<N> for S
         let unsub = self.actual_subscribe(ObserverN {
             next,
             is_stopped: false,
-            _marker: Default::default()
+            _marker: Default::default(),
         });
 
         SubscriptionWrapper(unsub)

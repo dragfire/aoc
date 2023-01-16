@@ -1,7 +1,9 @@
 use std::marker::PhantomData;
+
 use crate::observable::{LocalObservable, Observable};
 use crate::observer::Observer;
 
+#[derive(Clone)]
 pub struct MapOp<S, M> {
     pub source: S,
     pub func: M,
@@ -38,12 +40,12 @@ impl<Item, S, M> LocalObservable for MapOp<S, M>
 struct MapObserver<O, M, Item> {
     observer: O,
     map: M,
-    _marker: PhantomData<Item>
+    _marker: PhantomData<Item>,
 }
 
 impl<Item, Err, O, M, B> Observer for MapObserver<O, M, Item>
     where
-        O: Observer<Item = B, Err = Err>,
+        O: Observer<Item=B, Err=Err>,
         M: FnMut(Item) -> B,
 {
     type Item = Item;
@@ -66,6 +68,7 @@ impl<Item, Err, O, M, B> Observer for MapObserver<O, M, Item>
 mod tests {
     use crate::observable;
     use crate::observer::SubscribeNext;
+
     use super::*;
 
     #[test]

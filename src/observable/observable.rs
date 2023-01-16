@@ -1,6 +1,7 @@
-use crate::subscription::SubscriptionLike;
 use crate::{observer::Observer,
             operators::MapOp};
+use crate::prelude::FilterOp;
+use crate::subscription::SubscriptionLike;
 
 pub trait Observable: Sized {
     type Item;
@@ -14,6 +15,15 @@ pub trait Observable: Sized {
             func: f,
         }
     }
+
+    #[inline]
+    fn filter<F>(self, f: F) -> FilterOp<Self, F>
+        where F: FnMut(&Self::Item) -> bool {
+        FilterOp {
+            source: self,
+            filter: f,
+        }
+    }
 }
 
 pub trait LocalObservable: Observable {
@@ -21,5 +31,5 @@ pub trait LocalObservable: Observable {
 
     fn actual_subscribe<O>(self, observer: O) -> Self::Unsub
         where
-            O: Observer<Item = Self::Item, Err = Self::Err>;
+            O: Observer<Item=Self::Item, Err=Self::Err>;
 }

@@ -4,7 +4,7 @@ mod operators;
 pub mod observable;
 
 pub mod prelude {
+    pub use crate::observable::{self, *};
     pub use crate::observer::*;
     pub use crate::operators::*;
-    pub use crate::observable::{self, *};
 }
